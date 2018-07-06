@@ -18,7 +18,7 @@ class CreateTasksTable extends Migration
             $table->string('task_desc');
             $table->unsignedInteger('list_id');
             $table->timestamps();
-            $table->foreign('list_id')->references('id')->on('lists');
+            $table->foreign('list_id')->references('id')->on('lists')->onDelete('cascade');
         });
     }
 

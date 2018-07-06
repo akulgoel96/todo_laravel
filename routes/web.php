@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/user/{handle}', 'UserController@getId');
+Route::post('/createUser', 'UserController@createNew');
+Route::delete('/deleteUser/{handle}', 'UserController@delete');
