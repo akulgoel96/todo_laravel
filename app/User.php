@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 
 class User extends Model
@@ -18,17 +18,9 @@ class User extends Model
 
     public function deleteUser($handle)
     {
-        $id = $this->getUserId($handle);
-
-//        if($id == NULL)
-//        {
-//            $message = "No such user";
-//        }
-//
-//        //echo "id is ".$id;
-//
-//        else
+        if (User::where('user_handle', '=', $handle)->exists())
         {
+            $id = $this->getId($handle);
             $user = DB::table('users')->where('id', $id);
 
             //echo $user->pluck('user_name');
@@ -46,10 +38,15 @@ class User extends Model
             }
         }
 
+        else
+        {
+            $message = "No such user";
+        }
+
         return $message;
     }
 
-    public function getUserId($handle)
+    public function getId($handle)
     {
         //echo "$handle <br>";
 
@@ -58,12 +55,50 @@ class User extends Model
         return $user_id;
     }
 
-    public function createUser($name, $handle)
+    public function create($name, $handle)
     {
-        DB::table('users')->insert(
-            ['user_name' => $name, 'user_handle' => $handle]
-        );
+        if (User::where('user_handle', '=', $handle)->exists())
+        {
+            return "Handle already taken by another user.";
+        }
 
-        return "User creation successful";
+        else
+        {
+            DB::table('users')->insert(
+                ['user_name' => $name, 'user_handle' => $handle]
+            );
+
+            return "User creation successful";
+        }
+    }
+
+    public function updateHandle($old_handle, $new_handle)
+    {
+        if($old_handle == $new_handle)
+        {
+            return "Old and new handles are same. Please try again.";
+        }
+
+        elseif(User::where('user_handle', '=', $new_handle)->exists())
+        {
+            return "Handle already taken by another user.";
+        }
+
+        else
+        {
+            if (User::where('user_handle', '=', $old_handle)->exists())
+            {
+                DB::table('users')
+                    ->where('user_handle', $old_handle)
+                    ->update(['user_handle'=>$new_handle]);
+
+                return "Handle updated successfully.";
+            }
+
+            else
+            {
+                return "No such user exists with the given handle.";
+            }
+        }
     }
 }

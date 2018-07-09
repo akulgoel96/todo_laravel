@@ -18,7 +18,7 @@ class UserController extends Controller
     public function getId($handle)
     {
         $user = new User;
-        return response() -> json($user->getUserId($handle));
+        return response() -> json($user->getId($handle));
     }
 
     public function createNew(Request $request)
@@ -27,7 +27,18 @@ class UserController extends Controller
         $handle = $request->input('handle');
         //echo "Hello";
         $user = new User;
-        return response() -> json($user->createUser($name, $handle));
+        return response() -> json($user->create($name, $handle));
+    }
+
+    public function update(Request $request)
+    {
+        $old_handle = $request->input('old_handle');
+        $new_handle = $request->input('new_handle');
+        //echo $task_name;
+        //echo $task_id;
+
+        $user = new User;
+        return response() -> json($user->updateHandle($old_handle, $new_handle));
     }
 
 }
