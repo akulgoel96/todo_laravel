@@ -12,7 +12,7 @@ class UserController extends Controller
         $user = new User;
         //$id = $user->getUserId($handle);
         $message = $user->deleteUser($handle);
-        return ['message' => $message];
+        return response() -> json($message[0], $message[1]);
     }
 
     public function getId($handle)
@@ -27,7 +27,8 @@ class UserController extends Controller
         $handle = $request->input('handle');
         //echo "Hello";
         $user = new User;
-        return response() -> json($user->create($name, $handle));
+        $message = $user->createUser($name, $handle);
+        return response() -> json($message[0], $message[1]);
     }
 
     public function update(Request $request)
@@ -38,7 +39,8 @@ class UserController extends Controller
         //echo $task_id;
 
         $user = new User;
-        return response() -> json($user->updateHandle($old_handle, $new_handle));
+        $message = $user->updateHandle($old_handle, $new_handle);
+        return response() -> json($message[0], $message[1]);
     }
 
 }

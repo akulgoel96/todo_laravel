@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
 use App\Lists;
 
 class ListsController extends Controller
@@ -14,13 +13,15 @@ class ListsController extends Controller
         $handle = $request->input('handle');
         //echo "Hello";
         $lists = new Lists;
-        return response() -> json($lists->create($name, $handle));
+        $message = $lists->createNew($name, $handle);
+        return response() -> json($message[0], $message[1]);
     }
 
     public function getAll($handle)
     {
         $lists = new Lists;
-        return response() -> json($lists->getAll($handle));
+        $message = $lists->getAll($handle);
+        return response() -> json($message[0], $message[1]);
     }
 
     public function delete($list_id)
@@ -28,7 +29,7 @@ class ListsController extends Controller
         $list = new Lists;
         //$id = $user->getUserId($handle);
         $message = $list->deleteList($list_id);
-        return ['message' => $message];
+        return response() -> json($message[0], $message[1]);
     }
 
     public function update(Request $request)
@@ -39,6 +40,7 @@ class ListsController extends Controller
         //echo $task_id;
 
         $list = new Lists;
-        return response() -> json($list->updateList($list_id, $list_name));
+        $message = $list->updateList($list_id, $list_name);
+        return response() -> json($message[0], $message[1]);
     }
 }

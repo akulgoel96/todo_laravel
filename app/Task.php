@@ -3,10 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class Task extends Model
 {
+    protected $fillable = ['task_desc', 'list_id'];
+
     public function list()
     {
         return $this->belongsTo(Lists::class);
@@ -14,86 +15,98 @@ class Task extends Model
 
     public function add($list_id, $task_name)
     {
-        if (Lists::where('id', '=', $list_id)->exists())
+        if (Lists::where('id', $list_id)->exists())
         {
-            DB::table('tasks')->insert(
-                ['task_desc' => $task_name, 'list_id' => $list_id]
-            );
+            if(Task::where('list_id', $list_id)->where('task_desc', $task_name)->exists())
+            {
+                $message = "A task of the same name exists.";
+                return [['message' => $message], 409];
+            }
 
-            return "Added task to the list.";
+            else
+            {
+                Task::create(['list_id' => $list_id, 'task_desc' => $task_name]);
+
+//                Task::insert(
+//                    ['task_desc' => $task_name, 'list_id' => $list_id]
+//                );
+
+                $message = "Added task to the list.";
+                return [['message' => $message], 200];
+            }
         }
 
         else
         {
-            return "No such list exists";
+            $message = "No such list exists";
+            return [['message' => $message], 404];
         }
     }
 
     public function deleteTask($task_id)
     {
-        if (Task::where('id', '=', $task_id)->exists())
+        if (Task::where('id', $task_id)->exists())
         {
-            $task = DB::table('tasks')->where('id', $task_id);
-
-            //echo $user->pluck('user_name');
+            $task = Task::where('id', $task_id);
 
             $status = $task->delete();
 
             if($status === 0)
             {
                 $message = "Failed to delete task";
+                return [['message' => $message], 500];
             }
 
             else
             {
                 $message = "Task deleted successfully";
+                return [['message' => $message], 200];
             }
-
-            return $message;
         }
 
         else
         {
-            return "No such task exists with the given id.";
+            $message = "No such task exists with the given id.";
+            return [['message' => $message], 404];
         }
     }
 
     public function getAll($list_id)
     {
-        if (Lists::where('id', '=', $list_id)->exists())
+        if (Lists::where('id', $list_id)->exists())
         {
-            $tasks = DB::table('tasks')
-                    ->where('list_id', $list_id)
-                    ->pluck('task_desc', 'id');
+            $tasks = Task::where('list_id', $list_id)->pluck('task_desc', 'id');
 
             if(count($tasks) == 0)
             {
-                return "No task exists in this list.";
+                $message = "No task exists in this list.";
+                return [['message' => $message], 404];
             }
 
-            return $tasks;
+            return [$tasks, 200];
         }
 
         else
         {
-            return "No such list exists.";
+            $message = "No such list exists.";
+            return [['message' => $message], 404];
         }
     }
 
     public function updateTask($task_id, $task_name)
     {
-        if (Task::where('id', '=', $task_id)->exists())
+        if (Task::where('id', $task_id)->exists())
         {
-            DB::table('tasks')
-                ->where('id', $task_id)
-                ->update(['task_desc'=>$task_name]);
+            Task::where('id', $task_id)->update(['task_desc'=>$task_name]);
 
-            return "Task updated successfully.";
+            $message = "Task updated successfully.";
+            return [['message' => $message], 200];
         }
 
         else
         {
-            return "No such task exists with the given id.";
+            $message = "No such task exists with the given id.";
+            return [['message' => $message], 404];
         }
     }
 }

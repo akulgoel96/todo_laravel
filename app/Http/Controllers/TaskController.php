@@ -13,14 +13,16 @@ class TaskController extends Controller
         $task_name = $request->input('task_name');
         //echo "Hello";
         $task = new Task;
-        return response() -> json($task->add($list_id, $task_name));
+        $message = $task->add($list_id, $task_name);
+        return response() -> json($message[0], $message[1]);
     }
 
     public function getAll($list_id)
     {
         $tasks = new Task;
         //echo $user_id;
-        return response() -> json($tasks->getAll($list_id));
+        $message = $tasks->getAll($list_id);
+        return response() -> json($message[0], $message[1]);
     }
 
     public function delete($task_id)
@@ -28,7 +30,7 @@ class TaskController extends Controller
         $task = new Task;
         //$id = $user->getUserId($handle);
         $message = $task->deleteTask($task_id);
-        return ['message' => $message];
+        return response() -> json($message[0], $message[1]);
     }
 
     public function update(Request $request)
@@ -39,6 +41,7 @@ class TaskController extends Controller
         //echo $task_id;
 
         $task = new Task;
-        return response() -> json($task->updateTask($task_id, $task_name));
+        $message = $task->updateTask($task_id, $task_name);
+        return response() -> json($message[0], $message[1]);
     }
 }

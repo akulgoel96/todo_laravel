@@ -3,13 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 
 class User extends Model
 {
-    //const TASK = 'task';
-    protected $table = 'users';
+    protected $fillable = ['user_name', 'user_handle'];
 
     public function lists()
     {
@@ -18,10 +16,10 @@ class User extends Model
 
     public function deleteUser($handle)
     {
-        if (User::where('user_handle', '=', $handle)->exists())
+        if (User::where('user_handle', $handle)->exists())
         {
             $id = $this->getId($handle);
-            $user = DB::table('users')->where('id', $id);
+            $user = User::where('id', $id);
 
             //echo $user->pluck('user_name');
 
@@ -30,45 +28,44 @@ class User extends Model
             if($status === 0)
             {
                 $message = "Failed to delete user";
+                return [['message' => $message], 500];
             }
 
             else
             {
                 $message = "User deleted successfully";
+                return [['message' => $message], 200];
             }
         }
 
         else
         {
             $message = "No such user";
+            return [['message' => $message], 404];
         }
-
-        return $message;
     }
 
     public function getId($handle)
     {
-        //echo "$handle <br>";
-
-        $user_id = DB::table('users')->where('user_handle', $handle)->pluck('id');
+        $user_id = User::where('user_handle', $handle)->pluck('id');
 
         return $user_id;
     }
 
-    public function create($name, $handle)
+    public function createUser($name, $handle)
     {
-        if (User::where('user_handle', '=', $handle)->exists())
+        if (User::where('user_handle', $handle)->exists())
         {
-            return "Handle already taken by another user.";
+            $message = "Handle already taken by another user.";
+            return [['message' => $message], 409];
         }
 
         else
         {
-            DB::table('users')->insert(
-                ['user_name' => $name, 'user_handle' => $handle]
-            );
+            User::create(['user_name' => $name , 'user_handle' => $handle]);
 
-            return "User creation successful";
+            $message = "User creation successful";
+            return [['message' => $message], 200];
         }
     }
 
@@ -76,28 +73,30 @@ class User extends Model
     {
         if($old_handle == $new_handle)
         {
-            return "Old and new handles are same. Please try again.";
+            $message = "Old and new handles are same. Please try again.";
+            return [['message' => $message], 409];
         }
 
-        elseif(User::where('user_handle', '=', $new_handle)->exists())
+        elseif(User::where('user_handle', $new_handle)->exists())
         {
-            return "Handle already taken by another user.";
+            $message = "Handle already taken by another user.";
+            return [['message' => $message], 409];
         }
 
         else
         {
-            if (User::where('user_handle', '=', $old_handle)->exists())
+            if (User::where('user_handle', $old_handle)->exists())
             {
-                DB::table('users')
-                    ->where('user_handle', $old_handle)
-                    ->update(['user_handle'=>$new_handle]);
+                User::where('user_handle', $old_handle)->update(['user_handle'=>$new_handle]);
 
-                return "Handle updated successfully.";
+                $message = "Handle updated successfully.";
+                return [['message' => $message], 200];
             }
 
             else
             {
-                return "No such user exists with the given handle.";
+                $message = "No such user exists with the given handle.";
+                return [['message' => $message], 404];
             }
         }
     }
