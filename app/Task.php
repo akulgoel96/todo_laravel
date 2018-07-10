@@ -39,11 +39,11 @@ class Task extends Model
         }
     }
 
-    public function remove($task_id)
+    public function remove($task_name)
     {
-        if (Task::where('id', $task_id)->exists())
+        if (Task::where('task_desc', $task_name)->exists())
         {
-            $task = Task::where('id', $task_id);
+            $task = Task::where('task_desc', $task_name);
 
             $status = $task->delete();
 
@@ -62,7 +62,7 @@ class Task extends Model
 
         else
         {
-            $message = "No such task exists with the given id";
+            $message = "No such task exists with the given name";
             return [['message' => $message], 404];
         }
     }
@@ -71,7 +71,7 @@ class Task extends Model
     {
         if (Lists::where('id', $list_id)->exists())
         {
-            $tasks = Task::where('list_id', $list_id)->pluck('task_desc', 'id');
+            $tasks = Task::where('list_id', $list_id)->pluck('task_desc');
 
             if(count($tasks) == 0)
             {
@@ -89,19 +89,19 @@ class Task extends Model
         }
     }
 
-    public function rename($task_id, $task_name)
+    public function rename($old_task_name, $new_task_name)
     {
-        if (Task::where('id', $task_id)->exists())
+        if (Task::where('task_desc', $old_task_name)->exists())
         {
-            Task::where('id', $task_id)->update(['task_desc'=>$task_name]);
+            Task::where('task_desc', $old_task_name)->update(['task_desc'=>$new_task_name]);
 
-            $message = "Task updated successfully";
+            $message = "Task name updated successfully";
             return [['message' => $message], 200];
         }
 
         else
         {
-            $message = "No such task exists with the given id";
+            $message = "No such task exists with the given name";
             return [['message' => $message], 404];
         }
     }

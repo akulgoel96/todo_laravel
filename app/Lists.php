@@ -25,7 +25,7 @@ class Lists extends Model
             $user = new User;
             $user_id = $user->getId($handle);
 
-            $lists = Lists::where('user_id', $user_id)->pluck('list_name');
+            $lists = Lists::where('user_id', $user_id)->pluck('list_name', 'id');
 
             if(count($lists) == 0)
             {

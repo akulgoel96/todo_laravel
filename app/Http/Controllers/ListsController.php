@@ -33,11 +33,11 @@ class ListsController extends Controller
 
     public function update(Request $request)
     {
-        $list_id = $request->input('old_list_name');
-        $list_name = $request->input('new_list_name');
+        $old_list_name = $request->input('old_list_name');
+        $new_list_name = $request->input('new_list_name');
 
         $list = new Lists;
-        $message = $list->rename($list_id, $list_name);
+        $message = $list->rename($old_list_name, $new_list_name);
         return response() -> json($message[0], $message[1]);
     }
 }

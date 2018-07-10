@@ -24,20 +24,20 @@ class TaskController extends Controller
         return response() -> json($message[0], $message[1]);
     }
 
-    public function delete($task_id)
+    public function delete($task_name)
     {
         $task = new Task;
-        $message = $task->remove($task_id);
+        $message = $task->remove($task_name);
         return response() -> json($message[0], $message[1]);
     }
 
     public function update(Request $request)
     {
-        $task_id = $request->input('task_id');
-        $task_name = $request->input('task_name');
+        $old_task_name = $request->input('old_task_name');
+        $new_task_name = $request->input('new_task_name');
 
         $task = new Task;
-        $message = $task->rename($task_id, $task_name);
+        $message = $task->rename($old_task_name, $new_task_name);
         return response() -> json($message[0], $message[1]);
     }
 }

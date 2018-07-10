@@ -47,15 +47,15 @@ class ListsTest extends TestCase
     public function testGetAllListsSuccessful()
     {
         $list = new Lists;
-        $result = response()->json($list->getAll('akul.goel')[0]);
+        $result = response()->json($list->getAll('user1')[0]);
 
-        $expected_lists = '["Important","For Later","Hello World"]';
+        $expected_lists = '{"5":"daily","29":"test_random"}';
 
         $this->assertSame($expected_lists,
             $result->getContent());
     }
 
-    public function testUpdateListDoesNotExist()
+    public function testRenameListDoesNotExist()
     {
         $list = new Lists;
         $result = response()->json($list->rename('blabla', 'akulgoel06')[0]);
