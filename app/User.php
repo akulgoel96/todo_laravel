@@ -14,14 +14,12 @@ class User extends Model
         return $this->hasMany(Lists::class);
     }
 
-    public function deleteUser($handle)
+    public function remove($handle)
     {
         if (User::where('user_handle', $handle)->exists())
         {
             $id = $this->getId($handle);
             $user = User::where('id', $id);
-
-            //echo $user->pluck('user_name');
 
             $status = $user->delete();
 
@@ -52,11 +50,11 @@ class User extends Model
         return $user_id;
     }
 
-    public function createUser($name, $handle)
+    public function createNew($name, $handle)
     {
         if (User::where('user_handle', $handle)->exists())
         {
-            $message = "Handle already taken by another user.";
+            $message = "Handle already taken by another user";
             return [['message' => $message], 409];
         }
 
@@ -73,13 +71,13 @@ class User extends Model
     {
         if($old_handle == $new_handle)
         {
-            $message = "Old and new handles are same. Please try again.";
+            $message = "Old and new handles are same. Please try again";
             return [['message' => $message], 409];
         }
 
         elseif(User::where('user_handle', $new_handle)->exists())
         {
-            $message = "Handle already taken by another user.";
+            $message = "Handle already taken by another user";
             return [['message' => $message], 409];
         }
 
@@ -89,13 +87,13 @@ class User extends Model
             {
                 User::where('user_handle', $old_handle)->update(['user_handle'=>$new_handle]);
 
-                $message = "Handle updated successfully.";
+                $message = "Handle updated successfully";
                 return [['message' => $message], 200];
             }
 
             else
             {
-                $message = "No such user exists with the given handle.";
+                $message = "No such user exists with the given handle";
                 return [['message' => $message], 404];
             }
         }

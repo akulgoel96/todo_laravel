@@ -11,7 +11,7 @@ class ListsController extends Controller
     {
         $name = $request->input('name');
         $handle = $request->input('handle');
-        //echo "Hello";
+
         $lists = new Lists;
         $message = $lists->createNew($name, $handle);
         return response() -> json($message[0], $message[1]);
@@ -27,8 +27,7 @@ class ListsController extends Controller
     public function delete($list_id)
     {
         $list = new Lists;
-        //$id = $user->getUserId($handle);
-        $message = $list->deleteList($list_id);
+        $message = $list->remove($list_id);
         return response() -> json($message[0], $message[1]);
     }
 
@@ -36,11 +35,9 @@ class ListsController extends Controller
     {
         $list_id = $request->input('list_id');
         $list_name = $request->input('list_name');
-        //echo $task_name;
-        //echo $task_id;
 
         $list = new Lists;
-        $message = $list->updateList($list_id, $list_name);
+        $message = $list->rename($list_id, $list_name);
         return response() -> json($message[0], $message[1]);
     }
 }

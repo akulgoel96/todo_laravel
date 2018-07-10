@@ -19,7 +19,7 @@ class Task extends Model
         {
             if(Task::where('list_id', $list_id)->where('task_desc', $task_name)->exists())
             {
-                $message = "A task of the same name exists.";
+                $message = "A task of the same name exists";
                 return [['message' => $message], 409];
             }
 
@@ -27,11 +27,7 @@ class Task extends Model
             {
                 Task::create(['list_id' => $list_id, 'task_desc' => $task_name]);
 
-//                Task::insert(
-//                    ['task_desc' => $task_name, 'list_id' => $list_id]
-//                );
-
-                $message = "Added task to the list.";
+                $message = "Added task to the list";
                 return [['message' => $message], 200];
             }
         }
@@ -43,7 +39,7 @@ class Task extends Model
         }
     }
 
-    public function deleteTask($task_id)
+    public function remove($task_id)
     {
         if (Task::where('id', $task_id)->exists())
         {
@@ -66,7 +62,7 @@ class Task extends Model
 
         else
         {
-            $message = "No such task exists with the given id.";
+            $message = "No such task exists with the given id";
             return [['message' => $message], 404];
         }
     }
@@ -79,7 +75,7 @@ class Task extends Model
 
             if(count($tasks) == 0)
             {
-                $message = "No task exists in this list.";
+                $message = "No task exists in this list";
                 return [['message' => $message], 404];
             }
 
@@ -88,24 +84,24 @@ class Task extends Model
 
         else
         {
-            $message = "No such list exists.";
+            $message = "No such list exists";
             return [['message' => $message], 404];
         }
     }
 
-    public function updateTask($task_id, $task_name)
+    public function rename($task_id, $task_name)
     {
         if (Task::where('id', $task_id)->exists())
         {
             Task::where('id', $task_id)->update(['task_desc'=>$task_name]);
 
-            $message = "Task updated successfully.";
+            $message = "Task updated successfully";
             return [['message' => $message], 200];
         }
 
         else
         {
-            $message = "No such task exists with the given id.";
+            $message = "No such task exists with the given id";
             return [['message' => $message], 404];
         }
     }

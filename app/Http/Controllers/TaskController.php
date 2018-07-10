@@ -11,7 +11,7 @@ class TaskController extends Controller
     {
         $list_id = $request->input('list_id');
         $task_name = $request->input('task_name');
-        //echo "Hello";
+
         $task = new Task;
         $message = $task->add($list_id, $task_name);
         return response() -> json($message[0], $message[1]);
@@ -20,7 +20,6 @@ class TaskController extends Controller
     public function getAll($list_id)
     {
         $tasks = new Task;
-        //echo $user_id;
         $message = $tasks->getAll($list_id);
         return response() -> json($message[0], $message[1]);
     }
@@ -28,8 +27,7 @@ class TaskController extends Controller
     public function delete($task_id)
     {
         $task = new Task;
-        //$id = $user->getUserId($handle);
-        $message = $task->deleteTask($task_id);
+        $message = $task->remove($task_id);
         return response() -> json($message[0], $message[1]);
     }
 
@@ -37,11 +35,9 @@ class TaskController extends Controller
     {
         $task_id = $request->input('task_id');
         $task_name = $request->input('task_name');
-        //echo $task_name;
-        //echo $task_id;
 
         $task = new Task;
-        $message = $task->updateTask($task_id, $task_name);
+        $message = $task->rename($task_id, $task_name);
         return response() -> json($message[0], $message[1]);
     }
 }

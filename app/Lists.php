@@ -29,7 +29,7 @@ class Lists extends Model
 
             if(count($lists) == 0)
             {
-                $message = "No lists exists for the given user.";
+                $message = "No lists exists for the given user";
                 return [['message' => $message], 404];
             }
 
@@ -38,7 +38,7 @@ class Lists extends Model
 
         else
         {
-            $message =  "No such user exists.";
+            $message =  "No such user exists";
             return [['message' => $message], 404];
         }
     }
@@ -53,7 +53,7 @@ class Lists extends Model
 
             if(Lists::where('user_id', $user_id)->where('list_name', $list_name)->exists())
             {
-                $message = "A list of the same name exists.";
+                $message = "A list of the same name exists";
                 return [['message' => $message], 409];
             }
 
@@ -68,12 +68,12 @@ class Lists extends Model
 
         else
         {
-            $message = "No such user exists.";
+            $message = "No such user exists";
             return [['message' => $message], 404];
         }
     }
 
-    public function deleteList($list_id)
+    public function remove($list_id)
     {
         if (Lists::where('id', $list_id)->exists())
         {
@@ -96,25 +96,25 @@ class Lists extends Model
 
         else
         {
-            $message = "No such list exists with the given id.";
+            $message = "No such list exists with the given id";
             return [['message' => $message], 404];
         }
 
     }
 
-    public function updateList($list_id, $list_name)
+    public function rename($list_id, $list_name)
     {
         if (Lists::where('id', $list_id)->exists())
         {
-            Lists::where('id', $list_id)->update(['list_name'=>$list_name]);
+            Lists::where('id', $list_id)->update(['list_name' => $list_name]);
 
-            $message = "List name updated successfully.";
+            $message = "List name updated successfully";
             return [['message' => $message], 200];
         }
 
         else
         {
-            $message = "No such list exists with the given id.";
+            $message = "No such list exists with the given id";
             return [['message' => $message], 404];
         }
     }
