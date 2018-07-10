@@ -25,7 +25,7 @@ class Lists extends Model
             $user = new User;
             $user_id = $user->getId($handle);
 
-            $lists = Lists::where('user_id', $user_id)->pluck('list_name', 'id');
+            $lists = Lists::where('user_id', $user_id)->pluck('list_name');
 
             if(count($lists) == 0)
             {
@@ -73,11 +73,11 @@ class Lists extends Model
         }
     }
 
-    public function remove($list_id)
+    public function remove($list_name)
     {
-        if (Lists::where('id', $list_id)->exists())
+        if (Lists::where('list_name', $list_name)->exists())
         {
-            $list = Lists::where('id', $list_id);
+            $list = Lists::where('list_name', $list_name);
 
             $status = $list->delete();
 
@@ -96,17 +96,17 @@ class Lists extends Model
 
         else
         {
-            $message = "No such list exists with the given id";
+            $message = "No such list exists with the given name";
             return [['message' => $message], 404];
         }
 
     }
 
-    public function rename($list_id, $list_name)
+    public function rename($old_list_name, $new_list_name)
     {
-        if (Lists::where('id', $list_id)->exists())
+        if (Lists::where('list_name', $old_list_name)->exists())
         {
-            Lists::where('id', $list_id)->update(['list_name' => $list_name]);
+            Lists::where('list_name', $old_list_name)->update(['list_name' => $new_list_name]);
 
             $message = "List name updated successfully";
             return [['message' => $message], 200];
@@ -114,7 +114,7 @@ class Lists extends Model
 
         else
         {
-            $message = "No such list exists with the given id";
+            $message = "No such list exists with the given name";
             return [['message' => $message], 404];
         }
     }

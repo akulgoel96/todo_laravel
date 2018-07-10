@@ -13,13 +13,6 @@ class UserTest extends TestCase
      * @return void
      */
 
-    const MSG = 'message';
-
-    public function testExample()
-    {
-        $this->assertTrue(true);
-    }
-
     public function testAddUserSuccessful()
     {
         $user = new User;
@@ -28,7 +21,7 @@ class UserTest extends TestCase
             $result->getContent());
     }
 
-    public function testAddUserExists()
+    public function testAddUserExistsAlready()
     {
         $user = new User;
         $result = response()->json($user->createNew('HelloWorld', 'akul.goel')[0]);
@@ -47,8 +40,7 @@ class UserTest extends TestCase
     public function testUpdateUserNewHandleTaken()
     {
         $user = new User;
-        $result = response()->json($user->updateHandle('akulgoel96',
-            'akul.goel')[0]);
+        $result = response()->json($user->updateHandle('akulgoel96', 'akul.goel')[0]);
         $this->assertSame(json_encode(['message' => 'Handle already taken by another user']),
             $result->getContent());
     }
@@ -56,22 +48,20 @@ class UserTest extends TestCase
     public function testUpdateUserDoesNotExist()
     {
         $user = new User;
-        $result = response()->json($user->updateHandle('blabla',
-            'akulgoel06')[0]);
+        $result = response()->json($user->updateHandle('blabla', 'akulgoel06')[0]);
         $this->assertSame(json_encode(['message' => 'No such user exists with the given handle']),
             $result->getContent());
     }
 
-    public function testUpdateUserSuccessfully()
+    public function testUpdateUserSuccessful()
     {
         $user = new User;
-        $result = response()->json($user->updateHandle('akulgoel96',
-            'akulgoel64')[0]);
+        $result = response()->json($user->updateHandle('akulgoel96', 'akulgoel64')[0]);
         $this->assertSame(json_encode(['message' => 'Handle updated successfully']),
             $result->getContent());
     }
 
-    public function testRemoveUserSuccessfully()
+    public function testRemoveUserSuccessful()
     {
         $user = new User;
         $result = response()->json($user->remove('akulgoel64')[0]);
